@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who is Gay?</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0); /* Soft pastel gradient */
+            color: #2d3436;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: normal;
+        }
+        .buttons {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+        }
+        button {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        #yes {
+            background: #00b894;
+            color: white;
+        }
+        #yes:hover {
+            background: #00a085;
+            transform: scale(1.05);
+        }
+        #no {
+            background: #e17055;
+            color: white;
+            position: absolute; /* Allows it to move */
+        }
+        #no:hover {
+            background: #d63031;
+        }
+        .message {
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .message.show {
+            opacity: 1;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.2rem; }
+            button { padding: 0.8rem 1.5rem; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Who is Gay?</h1>
+    <h2>I am Gay</h2>
+    <div class="buttons">
+        <button id="yes">Yes</button>
+        <button id="no">No</button>
+    </div>
+    <div id="message" class="message"></div>
+
+    <script>
+        const noButton = document.getElementById('no');
+        const yesButton = document.getElementById('yes');
+        const message = document.getElementById('message');
+        let isMoving = false;
+
+        // Function to move the No button randomly within bounds
+        function moveNoButton() {
+            if (!isMoving) return;
+            
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const buttonWidth = noButton.offsetWidth;
+            const buttonHeight = noButton.offsetHeight;
+            
+            // Random position within viewport, accounting for button size
+            const maxX = viewportWidth - buttonWidth;
+            const maxY = viewportHeight - buttonHeight;
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noButton.style.left = `${randomX}px`;
+            noButton.style.top = `${randomY}px`;
+            
+            // Keep moving every 500ms
+            setTimeout(moveNoButton, 500);
+        }
+
+        // Start moving on hover (desktop) or touch (mobile)
+        noButton.addEventListener('mouseover', () => {
+            if (!isMoving) {
+                isMoving = true;
+                moveNoButton();
+            }
+        });
+
+        // For mobile: Start moving on touch
+        noButton.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevent default click
+            if (!isMoving) {
+                isMoving = true;
+                moveNoButton();
+            }
+        });
+
+        // Yes button click
+        yesButton.addEventListener('click', () => {
+            message.textContent = "Yay! Confirmed! 🎉";
+            message.classList.add('show');
+            isMoving = false; // Stop moving if Yes is clicked
+        });
+
+        // Prevent No button from being clicked (it moves instead)
+        noButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!isMoving) {
+                isMoving = true;
+                moveNoButton();
+            }
+        });
+    </script>
+</body>
+</html>
